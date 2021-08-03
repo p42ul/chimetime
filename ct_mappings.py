@@ -1,4 +1,4 @@
-SOLENOIDS = {
+solenoid_map = {
     1: 0,
     2: 1,
     3: 2,
@@ -13,7 +13,7 @@ SOLENOIDS = {
     12: 11,
 }
 
-LEDS = {
+led_map = {
     1: 0,
     2: 1,
     3: 2,
@@ -28,4 +28,4 @@ LEDS = {
     12: 11,
 }
 
-CT_BUTTON_GPIO_PIN = 21
+ct_button_gpio_pin = 21
