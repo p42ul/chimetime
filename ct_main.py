@@ -1,6 +1,7 @@
 """The main Chime Time program. Run this at system startup
 to run your clock."""
 from ct_mappings import ct_button_gpio_pin, led_map, solenoid_map
+from ct_music import play_sequence, current_phonetic_time
 
 import atexit
 from time import sleep
@@ -17,9 +18,12 @@ MUX_NUM_PINS = 16
 POLLING_INTERVAL = 1
 SOLENOID_ON_TIME = 0.1
 
+def degree_to_pin(solenoid_mux, led_mux, degree):
+    return solenoid_mux.get_pin(solenoid_map[degree])
+
 def sound_time(solenoid_mux, led_mux):
     print('button was pressed')
-    pass
+    play_sequence(current_phonetic_time(), degree_to_pin, SOLENOID_ON_TIME)
 
 def mux_all_pins_off(mux, num_pins):
     for p in [mux.get_pin(i) for i in range(num_pins)]:
