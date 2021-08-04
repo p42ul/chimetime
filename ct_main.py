@@ -4,6 +4,7 @@ from ct_mappings import ct_button_gpio_pin, led_map, solenoid_map
 from ct_music import play_sequence, current_phonetic_time
 
 import atexit
+import logging
 from time import sleep
 
 import board
@@ -31,7 +32,6 @@ def mux_all_pins_off(mux, num_pins):
         p.value = False
 
 def main():
-    print('hello')
     i2c = busio.I2C(board.SCL, board.SDA)
     solenoid_mux = MCP23017(i2c, address=SOLENOID_MUX_ADDR)
     led_mux = MCP23017(i2c, address=LED_MUX_ADDR)

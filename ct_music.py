@@ -1,6 +1,7 @@
+from __future__ import annotations
 from collections import namedtuple
 from time import localtime, sleep
-from typing import NewType
+from typing import NewType, List
 
 BPM = 180
 
@@ -8,7 +9,7 @@ class MusicError(Exception):
     pass
 
 Chord = namedtuple('Chord', ['degrees', 'duration'])
-Sequence = NewType('Sequence', list(Chord))
+Sequence = NewType('Sequence', List[Chord])
 
 _time_sequences = {
         0: [],
