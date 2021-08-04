@@ -70,7 +70,7 @@ def main():
 
     def all_off():
         for m in (solenoid_mux, led_mux):
-            init_mux(m, MUX_NUM_PINS)
+            mux_all_off(m, MUX_NUM_PINS)
     logging.info('Turning off all mux pins...')
     all_off()
     logging.info('All mux pins turned off.')
