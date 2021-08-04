@@ -42,9 +42,9 @@ def init_i2c():
 
 
 def init_mux(i2c, address):
-    logging.info(f'Initializing multiplexer at address {address}...')
+    logging.info(f'Initializing multiplexer at address {hex(address)}...')
     mux = MCP23017(i2c, address=address)
-    logging.info(f'Multiplexer at address {address} initialized.')
+    logging.info(f'Multiplexer at address {hex(address)} initialized.')
     return mux
 
 
