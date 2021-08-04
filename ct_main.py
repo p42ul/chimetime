@@ -22,13 +22,15 @@ SOLENOID_ON_TIME = 0.1
 
 def on_func_factory(solenoid_mux):
     def f(d):
-        solenoid_mux.get_pin(d).value = True
+        pin = solenoid_map[d]
+        solenoid_mux.get_pin(pin).value = True
     return f
 
 
 def off_func_factory(solenoid_mux):
     def f(d):
-        solenoid_mux.get_pin(d).value = False
+        pin = solenoid_map[d]
+        solenoid_mux.get_pin(pin).value = False
     return f
     
 
