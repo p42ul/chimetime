@@ -49,7 +49,7 @@ def init_mux(i2c, address):
 
 
 def init_ct_button(pin):
-    logging.info('Initializing CT button on GPIO pin {pin}...')
+    logging.info(f'Initializing CT button on GPIO pin {pin}...')
     ct_button = Button(ct_button_gpio_pin, pull_up=True)
     logging.info('CT button initialized.')
     return ct_button
