@@ -20,12 +20,12 @@ POLLING_INTERVAL = 1
 SOLENOID_ON_TIME = 0.1
 
 
-def degree_to_pin(solenoid_mux, led_mux, degree):
-    return solenoid_mux.get_pin(solenoid_map[degree])
+def degree_to_pin_factory(mux):
+    return lambda degree: mux.get_pin(solenoid_map[degree])
 
 
 def sound_time(solenoid_mux, led_mux):
-    play_sequence(current_phonetic_time(), degree_to_pin, SOLENOID_ON_TIME)
+    play_sequence(current_phonetic_time(), degree_to_pin_factory(solenoid_mux), SOLENOID_ON_TIME)
 
 
 def mux_all_off(mux, num_pins, value=False):
