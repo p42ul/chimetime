@@ -61,6 +61,7 @@ def button_press_handler(solenoid_mux, led_mux):
 
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     logging.info('Starting Chime Time...')
     i2c = init_i2c()
     solenoid_mux = init_mux(i2c, SOLENOID_MUX_ADDR)
