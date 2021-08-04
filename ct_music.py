@@ -1,7 +1,6 @@
-from __future__ import annotations
 from collections import namedtuple
 from time import localtime, sleep
-from typing import NewType, List
+from typing import NewType, List, Tuple
 
 BPM = 180
 
@@ -38,7 +37,7 @@ _time_sequences = {
         50: [Chord([5], 0.5), Chord([5], 0.5)],
 }
 
-def _phoneticize_number(num: int) -> tuple(int, int):
+def _phoneticize_number(num: int) -> Tuple[int, int]:
     if num == 0:
         return []
     elif num > 0 and num < 10:

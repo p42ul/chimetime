@@ -26,10 +26,10 @@ def sound_time(solenoid_mux, led_mux):
     print('button was pressed')
     play_sequence(current_phonetic_time(), degree_to_pin, SOLENOID_ON_TIME)
 
-def mux_all_pins_off(mux, num_pins):
+def init_mux(mux, num_pins, value=False):
     for p in [mux.get_pin(i) for i in range(num_pins)]:
         p.direction = Direction.OUTPUT
-        p.value = False
+        p.value = value
 
 def main():
     i2c = busio.I2C(board.SCL, board.SDA)
@@ -38,7 +38,7 @@ def main():
     ct_button = Button(ct_button_gpio_pin, pull_up=True)
     def all_off():
         for m in (solenoid_mux, led_mux):
-            mux_all_pins_off(m, MUX_NUM_PINS)
+            init_mux(m, MUX_NUM_PINS)
     all_off()
     atexit.register(all_off)
     while True:
