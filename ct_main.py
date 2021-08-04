@@ -77,7 +77,8 @@ def main():
     atexit.register(all_off)
     logging.info('Entering endless loop...')
     while True:
-        if ct_button.is_pressed:
+        # if ct_button.is_pressed:
+        if True:
             button_press_handler(solenoid_mux, led_mux)
         sleep(POLLING_INTERVAL)
 
