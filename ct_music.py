@@ -63,9 +63,9 @@ def _play_chord(chord: Chord, degree_to_pin, on_func, off_func, solenoid_on_time
         off_func(p)
     sleep(duration_secs - solenoid_on_time)
 
-def play_sequence(sequence: Sequence, degree_to_pin, solenoid_on_time):
+def play_sequence(sequence: Sequence, degree_to_pin, on_func, off_func, solenoid_on_time):
     for chord in sequence:
-        _play_chord(chord, degree_to_pin, solenoid_on_time)
+        _play_chord(chord, degree_to_pin, on_func, off_func, solenoid_on_time)
 
 def current_phonetic_time(now=None):
     if now is None:
