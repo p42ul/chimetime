@@ -69,11 +69,11 @@ def main():
     ct_button = init_ct_button(ct_button_gpio_pin)
 
     def all_off():
+        logging.info('Turning off all mux pins...')
         for m in (solenoid_mux, led_mux):
             mux_all_off(m, MUX_NUM_PINS)
-    logging.info('Turning off all mux pins...')
+        logging.info('All mux pins turned off.')
     all_off()
-    logging.info('All mux pins turned off.')
     atexit.register(all_off)
     logging.info('Entering endless loop...')
     while True:
