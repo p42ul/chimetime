@@ -20,17 +20,17 @@ _time_sequences = {
         6: [Chord([6], 1)],
         7: [Chord([7], 0.5), Chord([7], 0.5)],
         8: [Chord([8], 1)],
-        9: [Chord([2, 7], 1)],
-        10: [Chord([3, 7], 1)],
-        11: [Chord([1], 0.5), Chord([1], 0.5), Chord([1], 1)],
-        12: [Chord([5, 7], 1)],
+        9: [Chord([9], 1)],
+        10: [Chord([10], 1)],
+        11: [Chord([11], 0.5), Chord([11], 0.5), Chord([11], 1)],
+        12: [Chord([12], 1)],
         13: [Chord([1], 0.5), Chord([3], 1)],
         14: [Chord([1], 0.5), Chord([4], 1)],
         15: [Chord([1], 0.5), Chord([5], 1)],
         16: [Chord([1], 0.5), Chord([6], 1)],
         17: [Chord([1], 0.5), Chord([1], 0.5),  Chord([7], 1)],
         18: [Chord([1], 0.5), Chord([8], 1)],
-        19: [Chord([1], 0.5), Chord([2, 7], 1)],
+        19: [Chord([1], 0.5), Chord([9], 1)],
         20: [Chord([2], 0.5), Chord([2], 0.5)],
         30: [Chord([3], 0.5), Chord([3], 0.5)],
         40: [Chord([4], 0.5), Chord([4], 0.5)],
@@ -64,6 +64,7 @@ def _play_chord(chord: Chord, on_func, off_func, solenoid_on_time):
     sleep(duration_secs - solenoid_on_time)
 
 def play_sequence(sequence: Sequence, on_func, off_func, solenoid_on_time):
+    logging.debug(f'Playing sequence {sequence}.')
     for chord in sequence:
         _play_chord(chord, on_func, off_func, solenoid_on_time)
 
