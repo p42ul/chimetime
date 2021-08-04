@@ -1,6 +1,6 @@
 """The main Chime Time program. Run this at system startup
 to run your clock."""
-from ct_mappings import ct_button_gpio_pin, led_map, solenoid_map
+from ct_mappings import ct_button_gpio_pin, solenoid_map
 from ct_music import play_sequence, current_phonetic_time
 
 import atexit
@@ -20,17 +20,22 @@ POLLING_INTERVAL = 1
 SOLENOID_ON_TIME = 0.1
 
 
-def degree_to_pin_factory(mux):
-    return lambda degree: mux.get_pin(solenoid_map[degree])
+def on_func_factory(solenoid_mux):
+    def f(d):
+        solenoid_mux.get_pin(d).value = True
+    return f
 
-def on_func(pin):
-    pin.value = True
 
-def off_func(pin):
-    pin.value = False
+def off_func_factory(solenoid_mux):
+    def f(d):
+        solenoid_mux.get_pin(d).value = False
+    return f
+    
 
-def sound_time(solenoid_mux, led_mux):
-    play_sequence(current_phonetic_time(), degree_to_pin_factory(solenoid_mux), on_func, off_func, SOLENOID_ON_TIME)
+
+def button_press_handler(solenoid_mux):
+    logging.debug('CT button press detected.')
+    play_sequence(current_phonetic_time(), on_func_factory(solenoid_mux), off_func_factory(solenoid_mux), SOLENOID_ON_TIME)
 
 
 def mux_all_off(mux, num_pins, value=False):
@@ -60,11 +65,6 @@ def init_ct_button(pin):
     return ct_button
 
 
-def button_press_handler(solenoid_mux, led_mux):
-    logging.debug('CT button press detected.')
-    sound_time(solenoid_mux, led_mux)
-
-
 def main():
     logging.basicConfig(level=logging.INFO)
     logging.info('Starting Chime Time...')
@@ -84,7 +84,7 @@ def main():
     while True:
         # if ct_button.is_pressed:
         if True:
-            button_press_handler(solenoid_mux, led_mux)
+            button_press_handler(solenoid_mux)
         sleep(POLLING_INTERVAL)
 
 

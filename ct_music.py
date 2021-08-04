@@ -54,18 +54,18 @@ def _phoneticize_number(num: int) -> Tuple[int, int]:
     else:
         raise MusicError(f'Can only phoneticize numbers between 0-59, inclusive. Got: {num}')
 
-def _play_chord(chord: Chord, degree_to_pin, on_func, off_func, solenoid_on_time):
+def _play_chord(chord: Chord, on_func, off_func, solenoid_on_time):
     duration_secs = chord.duration / (BPM / 60)
-    for p in (degree_to_pin(d) for d in chord.degrees):
-        on_func(p)
+    for d in chord.degrees:
+        on_func(d)
     sleep(solenoid_on_time)
-    for p in (degree_to_pin(d) for d in chord.degrees):
-        off_func(p)
+    for d in chord.degrees:
+        off_func(d)
     sleep(duration_secs - solenoid_on_time)
 
-def play_sequence(sequence: Sequence, degree_to_pin, on_func, off_func, solenoid_on_time):
+def play_sequence(sequence: Sequence, on_func, off_func, solenoid_on_time):
     for chord in sequence:
-        _play_chord(chord, degree_to_pin, on_func, off_func, solenoid_on_time)
+        _play_chord(chord, on_func, off_func, solenoid_on_time)
 
 def current_phonetic_time(now=None):
     if now is None:
