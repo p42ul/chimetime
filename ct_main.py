@@ -24,6 +24,7 @@ def on_func_factory(solenoid_mux):
     def f(d):
         pin = solenoid_map[d]
         solenoid_mux.get_pin(pin).value = True
+        logging.debug(f'Pin {pin} is on.')
     return f
 
 
@@ -31,6 +32,7 @@ def off_func_factory(solenoid_mux):
     def f(d):
         pin = solenoid_map[d]
         solenoid_mux.get_pin(pin).value = False
+        logging.debug(f'Pin {pin} is off.')
     return f
     
 
