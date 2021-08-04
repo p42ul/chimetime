@@ -19,32 +19,67 @@ MUX_NUM_PINS = 16
 POLLING_INTERVAL = 1
 SOLENOID_ON_TIME = 0.1
 
+
 def degree_to_pin(solenoid_mux, led_mux, degree):
     return solenoid_mux.get_pin(solenoid_map[degree])
 
+
 def sound_time(solenoid_mux, led_mux):
-    print('button was pressed')
     play_sequence(current_phonetic_time(), degree_to_pin, SOLENOID_ON_TIME)
 
-def init_mux(mux, num_pins, value=False):
+
+def mux_all_off(mux, num_pins, value=False):
     for p in [mux.get_pin(i) for i in range(num_pins)]:
         p.direction = Direction.OUTPUT
         p.value = value
 
-def main():
+
+def init_i2c():
+    logging.info('Initializing I2C...')
     i2c = busio.I2C(board.SCL, board.SDA)
-    solenoid_mux = MCP23017(i2c, address=SOLENOID_MUX_ADDR)
-    led_mux = MCP23017(i2c, address=LED_MUX_ADDR)
+    logging.info('I2C initialized.')
+    return i2c
+
+
+def init_mux(i2c, address):
+    logging.info(f'Initializing multiplexer at address {address}...')
+    mux = MCP23017(i2c, address=address)
+    logging.info(f'Multiplexer at address {address} initialized.')
+    return mux
+
+
+def init_ct_button(pin):
+    logging.info('Initializing GPIO pin for CT button...')
     ct_button = Button(ct_button_gpio_pin, pull_up=True)
+    logging.info('CT button initialized.')
+    return ct_button
+
+
+def button_press_handler(solenoid_mux, led_mux):
+    logging.debug('CT button press detected.')
+    sound_time(solenoid_mux, led_mux)
+
+
+def main():
+    logging.info('Starting Chime Time...')
+    i2c = init_i2c()
+    solenoid_mux = init_mux(i2c, SOLENOID_MUX_ADDR)
+    led_mux = init_mux(i2c, LED_MUX_ADDR)
+    ct_button = init_ct_button(ct_button_gpio_pin)
+
     def all_off():
         for m in (solenoid_mux, led_mux):
             init_mux(m, MUX_NUM_PINS)
+    logging.info('Turning off all mux pins...')
     all_off()
+    logging.info('All mux pins turned off.')
     atexit.register(all_off)
+    logging.info('Entering endless loop...')
     while True:
         if ct_button.is_pressed:
-            sound_time(solenoid_mux, led_mux)
+            button_press_handler(solenoid_mux, led_mux)
         sleep(POLLING_INTERVAL)
+
 
 if __name__ == '__main__':
     main()
