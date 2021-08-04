@@ -23,9 +23,14 @@ SOLENOID_ON_TIME = 0.1
 def degree_to_pin_factory(mux):
     return lambda degree: mux.get_pin(solenoid_map[degree])
 
+def on_func(pin):
+    pin.value = True
+
+def off_func(pin):
+    pin.value = False
 
 def sound_time(solenoid_mux, led_mux):
-    play_sequence(current_phonetic_time(), degree_to_pin_factory(solenoid_mux), SOLENOID_ON_TIME)
+    play_sequence(current_phonetic_time(), degree_to_pin_factory(solenoid_mux), on_func, off_func, SOLENOID_ON_TIME)
 
 
 def mux_all_off(mux, num_pins, value=False):
