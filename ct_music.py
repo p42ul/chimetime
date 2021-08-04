@@ -1,4 +1,5 @@
 from collections import namedtuple
+import logging
 from time import localtime, sleep
 from typing import NewType, List, Tuple
 
