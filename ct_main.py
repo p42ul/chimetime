@@ -34,12 +34,12 @@ def off_func_factory(solenoid_mux):
         solenoid_mux.get_pin(pin).value = False
         logging.debug(f'Pin {pin} is off.')
     return f
-    
 
 
 def button_press_handler(solenoid_mux):
     logging.debug('CT button press detected.')
-    play_sequence(current_phonetic_time(), on_func_factory(solenoid_mux), off_func_factory(solenoid_mux), SOLENOID_ON_TIME)
+    current_time = current_phonetic_time()
+    play_sequence(current_time, on_func_factory(solenoid_mux), off_func_factory(solenoid_mux), SOLENOID_ON_TIME)
 
 
 def mux_all_off(mux, num_pins, value=False):
