@@ -52,7 +52,7 @@ def main():
     logging.info('Entering endless loop...')
     while True:
         if ct_button.is_pressed():
-            button_press_handler(solenoid_mux, beta_cuck)
+            button_press_handler(solenoid_mux, clock)
         sleep(POLLING_INTERVAL)
 
 
