@@ -1,20 +1,21 @@
-from time import sleep
-from datetime import datetime
+from ct_time import CTTime
 
-def get_current_time():
-    time = datetime.now()
-    hour, minute = time.hour, time.minute
-    if hour > 12:
-        hour -= 12
-    return hour, minute
+import logging
 
 
-def minute_to_closest_12th(minute):
-    return round(minute / 5)
+class CTLED:
+    def __init__(self, mux)
+        self.mux = mux
+        self.POLL_INTERVAL = 1
 
-def illuminate_leds(mux, leds)
-    for l in leds:
-        mux.get_pin(l).value = True
-    sleep(1)
-    for l in leds:
-        mux.get_pin(l).value = False
+    def run(self):
+        logging.info('Starting LED clock...')
+        clock = CTTime()
+        while True:
+            mux.all_off()
+            hour_pin, minute = clock.get_current_time()
+            minute_pin = clock.minute_to_closest_12th(minute)
+            self.mux.all_off()
+            self.mux.on(hour_pin)
+            self.mux.on(minute_pin)
+            sleep(self.POLL_INTERVAL)
