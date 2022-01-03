@@ -14,6 +14,7 @@ from gpiozero import Button
 
 SOLENOID_MUX_ADDR = 0x20
 LED_MUX_ADDR = 0x24
+CT_BUTTON_GPIO_PIN = 21
 POLLING_INTERVAL = 1
 SOLENOID_ON_TIME = 0.1
 INTERDIGIT_DELAY = 1
@@ -42,7 +43,9 @@ def main():
     logging.info('Starting Chime Time...')
     i2c = init_i2c()
     solenoid_mux = CTMux(i2c, SOLENOID_MUX_ADDR, 13)
-    ct_button = CTButton(gpiozero)
+    led_mux = CTMux(i2c, LED_MUX_ADDR, 12)
+    led_controller = CTLED(led_mux)
+    button = CTButton(CT_BUTTON_GPIO_PIN)
     clock = CTTime()
     def all_off():
         for m in (solenoid_mux, led_mux):
@@ -51,7 +54,8 @@ def main():
     atexit.register(all_off)
     logging.info('Entering endless loop...')
     while True:
-        if ct_button.is_pressed():
+        led_controller.update()
+        if button.is_pressed():
             button_press_handler(solenoid_mux, clock)
         sleep(POLLING_INTERVAL)
 
