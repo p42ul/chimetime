@@ -10,7 +10,6 @@ from time import sleep
 
 import board
 import busio
-from gpiozero import Button
 
 SOLENOID_MUX_ADDR = 0x20
 LED_MUX_ADDR = 0x24

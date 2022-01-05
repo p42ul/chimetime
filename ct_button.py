@@ -1,3 +1,5 @@
+from gpiozero import Button
+
 import logging
 
 class CTButton:
