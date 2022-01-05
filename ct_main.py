@@ -43,8 +43,8 @@ def main():
     logging.info('Starting Chime Time...')
     i2c = init_i2c()
     solenoid_mux = CTMux(i2c, SOLENOID_MUX_ADDR, 13)
-    led_mux = CTMux(i2c, LED_MUX_ADDR, 12)
-    led_controller = CTLED(led_mux)
+    # led_mux = CTMux(i2c, LED_MUX_ADDR, 12)
+    # led_controller = CTLED(led_mux)
     button = CTButton(CT_BUTTON_GPIO_PIN)
     clock = CTTime()
     def all_off():
@@ -54,7 +54,7 @@ def main():
     atexit.register(all_off)
     logging.info('Entering endless loop...')
     while True:
-        led_controller.update()
+        # led_controller.update()
         if button.is_pressed():
             button_press_handler(solenoid_mux, clock)
         sleep(POLLING_INTERVAL)
