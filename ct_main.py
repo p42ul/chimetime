@@ -1,7 +1,7 @@
 """The main Chime Time program. Run this at system startup
 to run your clock."""
 from ct_button import CTButton
-from ct_mux import CTMux
+from ct_testmux import CTMux
 from ct_time import CTTime
 
 import atexit
