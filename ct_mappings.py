@@ -1,5 +1,3 @@
-test_solenoid_map = {i+1: e for i, e in enumerate((17, 27, 22, 5, 6, 13, 19, 26))}
-
 solenoid_map = {
     1: 0,
     2: 1,

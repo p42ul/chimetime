@@ -1,7 +1,3 @@
-from gpiozero import Button
-
-import logging
-
 class CTButton:
     def __init__(self, pin: int):
         logging.info(f'Initializing CT button on GPIO pin {pin}...')
