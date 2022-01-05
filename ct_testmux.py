@@ -1,5 +1,7 @@
 from gpiozero import LED
 
+import logging
+
 
 class CTMux:
     def __init__(self, _i2c, _address, _num_pins):
