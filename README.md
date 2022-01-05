@@ -38,4 +38,5 @@ print("SPI ok!")
 print("done!")
 EOF
 python3 blinkatest.py
+sudo pip3 install adafruit-circuitpython-mcp230xx
 ```
