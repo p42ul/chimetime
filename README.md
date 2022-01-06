@@ -10,7 +10,6 @@ Please also make sure Python 3.x is installed.
 `sudo apt update`
 
 ```
-<<<<<<< HEAD
 cd ~
 sudo raspi-config
 sudo apt update
@@ -44,11 +43,6 @@ print("done!")
 EOF
 python3 blinkatest.py
 sudo pip3 install adafruit-circuitpython-mcp230xx
-=======
-sudo apt install \
-git
-python3-gpiozero
->>>>>>> parent of 7640261 (Update README.md)
 ```
 
 
