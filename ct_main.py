@@ -54,7 +54,7 @@ def main():
     atexit.register(all_off)
     logging.info('Entering endless loop...')
     while True:
-         led_controller.update()
+        led_controller.update()
         if button.is_pressed():
             button_press_handler(solenoid_mux, clock)
         sleep(POLLING_INTERVAL)
