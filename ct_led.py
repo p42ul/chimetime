@@ -4,7 +4,7 @@ import logging
 
 
 class CTLED:
-    def __init__(self, mux)
+    def __init__(self, mux):
         self.mux = mux
         self.clock = CTTime()
 
