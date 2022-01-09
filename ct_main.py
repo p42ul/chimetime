@@ -17,13 +17,22 @@ from gpiozero import Button
 SOLENOID_MUX_ADDR = 0x20
 LED_MUX_ADDR = 0x24
 CT_BUTTON_GPIO_PIN = 21
-POLLING_INTERVAL = 1
+POLLING_INTERVAL = 0.1
 SOLENOID_ON_TIME = 0.1
 INTERDIGIT_DELAY = 0.5
+
+MAJOR_ARP = [1, 3, 5, 8]
 
 def button_press_handler(solenoid_mux, clock):
     logging.debug('CT button press detected.')
     digits = clock.get_time_digits()
+    for d in MAJOR_ARP:
+        pin = ct1_solenoid_map[d]
+        solenoid_mux.on(pin)
+        sleep(SOLENOID_ON_TIME)
+        solenoid_mux.off(pin)
+        sleep(INTERDIGIT_DELAY / 3)
+    sleep(INTERDIGIT_DELAY * 2)
     for d in digits:
         pin = ct1_solenoid_map[d]
         solenoid_mux.on(pin)
@@ -55,9 +64,10 @@ def main():
     logging.info('Entering endless loop...')
     while True:
         led_controller.update()
+        # input('press enter to chime')
+        # button_press_handler(solenoid_mux, clock)
         if button.is_pressed():
             button_press_handler(solenoid_mux, clock)
-        sleep(POLLING_INTERVAL)
 
 
 if __name__ == '__main__':
