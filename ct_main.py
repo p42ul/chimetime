@@ -2,6 +2,7 @@
 to run your clock."""
 from ct_button import CTButton
 from ct_mappings import ct1_solenoid_map
+from ct_mappings import ct1_led_map
 from ct_mux import CTMux
 from ct_time import CTTime
 from ct_led import CTLED
@@ -27,17 +28,15 @@ def button_press_handler(solenoid_mux, clock):
     logging.debug('CT button press detected.')
     digits = clock.get_time_digits()
     for d in MAJOR_ARP:
-        pin = ct1_solenoid_map[d]
-        solenoid_mux.on(pin)
+        solenoid_mux.on(d)
         sleep(SOLENOID_ON_TIME)
-        solenoid_mux.off(pin)
+        solenoid_mux.off(d)
         sleep(INTERDIGIT_DELAY / 3)
     sleep(INTERDIGIT_DELAY * 2)
     for d in digits:
-        pin = ct1_solenoid_map[d]
-        solenoid_mux.on(pin)
+        solenoid_mux.on(d)
         sleep(SOLENOID_ON_TIME)
-        solenoid_mux.off(pin)
+        solenoid_mux.off(d)
         sleep(INTERDIGIT_DELAY)
 
 def init_i2c():
@@ -50,8 +49,8 @@ def main():
     logging.basicConfig(level=logging.DEBUG)
     logging.info('Starting Chime Time...')
     i2c = init_i2c()
-    solenoid_mux = CTMux(i2c, SOLENOID_MUX_ADDR, 16)
-    led_mux = CTMux(i2c, LED_MUX_ADDR, 16)
+    solenoid_mux = CTMux(i2c, SOLENOID_MUX_ADDR, ct1_solenoid_map)
+    led_mux = CTMux(i2c, LED_MUX_ADDR, ct1_led_map)
     led_controller = CTLED(led_mux)
     button = CTButton(CT_BUTTON_GPIO_PIN)
     clock = CTTime()
@@ -64,8 +63,6 @@ def main():
     logging.info('Entering endless loop...')
     while True:
         led_controller.update()
-        # input('press enter to chime')
-        # button_press_handler(solenoid_mux, clock)
         if button.is_pressed():
             button_press_handler(solenoid_mux, clock)
 
