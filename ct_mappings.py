@@ -14,7 +14,7 @@ ct1_solenoid_map = {
     12: 14,
 }
 
-led_map = {
+ct1_led_map = {
         1: 0,
         2: 1,
         3: 2,
