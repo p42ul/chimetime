@@ -1,0 +1,11 @@
+[Unit]
+Description=Chime Time
+After=multi-user.target
+
+[Service]
+User=pi
+ExecStart=/usr/bin/python3 /home/pi/chimetime/ct_main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
