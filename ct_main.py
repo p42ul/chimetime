@@ -1,13 +1,13 @@
 """The main Chime Time program. Run this at system startup
 to run your clock."""
 from ct_button import CTButton
-from ct_mappings import ct1_solenoid_map
-from ct_mappings import ct1_led_map
+from ct_mappings import ct1_led_map, ct1_solenoid_map
 from ct_mux import CTMux
 from ct_time import CTTime
 
-import atexit
 import logging
+import signal
+import sys
 from time import sleep
 
 import board
@@ -49,6 +49,7 @@ def init_i2c():
     logging.info('I2C initialized.')
     return i2c
 
+
 def main():
     logging.basicConfig(level=logging.DEBUG)
     logging.info('Starting Chime Time...')
@@ -58,11 +59,14 @@ def main():
     button = CTButton(CT_BUTTON_GPIO_PIN)
     clock = CTTime()
     def all_off():
-        logging.info('Turning off all mux outputs on exit...')
+        logging.info('Turning off all mux outputs.')
         for m in (solenoid_mux, led_mux):
             m.all_off()
+    def exit_handler(signo, frame):
+        all_off()
+        sys.exit(0)
     all_off()
-    atexit.register(all_off)
+    signal.signal(signal.SIGTERM, exit_handler)
     logging.info('Entering endless loop...')
     while True:
         if button.is_pressed():
