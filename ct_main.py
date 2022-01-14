@@ -5,7 +5,6 @@ from ct_mappings import ct1_solenoid_map
 from ct_mappings import ct1_led_map
 from ct_mux import CTMux
 from ct_time import CTTime
-from ct_led import CTLED
 
 import atexit
 import logging
@@ -24,20 +23,25 @@ INTERDIGIT_DELAY = 0.5
 
 MAJOR_ARP = [1, 3, 5, 8]
 
-def button_press_handler(solenoid_mux, clock):
+def button_press_handler(solenoid_mux, led_mux, clock):
     logging.debug('CT button press detected.')
     digits = clock.get_time_digits()
+    play_arp(solenoid_mux)
+    sleep(INTERDIGIT_DELAY * 2)
+    for d in digits:
+        solenoid_mux.on(d)
+        led_mux.on(d)
+        sleep(SOLENOID_ON_TIME)
+        solenoid_mux.off(d)
+        led_mux.off(d)
+        sleep(INTERDIGIT_DELAY)
+
+def play_arp(solenoid_mux):
     for d in MAJOR_ARP:
         solenoid_mux.on(d)
         sleep(SOLENOID_ON_TIME)
         solenoid_mux.off(d)
         sleep(INTERDIGIT_DELAY / 3)
-    sleep(INTERDIGIT_DELAY * 2)
-    for d in digits:
-        solenoid_mux.on(d)
-        sleep(SOLENOID_ON_TIME)
-        solenoid_mux.off(d)
-        sleep(INTERDIGIT_DELAY)
 
 def init_i2c():
     logging.info('Initializing I2C...')
@@ -51,7 +55,6 @@ def main():
     i2c = init_i2c()
     solenoid_mux = CTMux(i2c, SOLENOID_MUX_ADDR, ct1_solenoid_map)
     led_mux = CTMux(i2c, LED_MUX_ADDR, ct1_led_map)
-    led_controller = CTLED(led_mux)
     button = CTButton(CT_BUTTON_GPIO_PIN)
     clock = CTTime()
     def all_off():
@@ -62,9 +65,8 @@ def main():
     atexit.register(all_off)
     logging.info('Entering endless loop...')
     while True:
-        led_controller.update()
         if button.is_pressed():
-            button_press_handler(solenoid_mux, clock)
+            button_press_handler(solenoid_mux, led_mux, clock)
 
 
 if __name__ == '__main__':
