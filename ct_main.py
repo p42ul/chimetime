@@ -5,6 +5,7 @@ from ct_mappings import ct1_led_map, ct1_solenoid_map
 from ct_mux import CTMux
 from ct_time import CTTime
 
+import argparse
 import logging
 import signal
 import sys
@@ -48,6 +49,11 @@ def init_i2c():
     i2c = busio.I2C(board.SCL, board.SDA)
     logging.info('I2C initialized.')
     return i2c
+
+def args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', help='Config file location.')
+    return parser.parse_args()
 
 
 def main():
