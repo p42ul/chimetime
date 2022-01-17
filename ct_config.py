@@ -21,10 +21,13 @@ class CTConfig:
         self.config = self.parse_config(config)
 
     def default_config(self):
+        # If you change a value here, be sure to add it to the
+        # included config.ini file, and vice versa.
         return {'play_arp': True,
                 'arp_delay': 1.0,
                 'polling_interval': 0.01,
                 'interdigit_delay': 0.5,
+                'arp_interdigit_delay': 0.15,
                 }
 
     def parse_config(self, config):

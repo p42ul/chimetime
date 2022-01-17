@@ -37,12 +37,12 @@ def button_press_handler(solenoid_mux, led_mux, clock, config):
         sleep(interdigit_delay)
 
 def play_arp(solenoid_mux, config):
-    interdigit_delay = config['interdigit_delay']
+    arp_interdigit_delay = config['arp_interdigit_delay']
     for d in MAJOR_ARP:
         solenoid_mux.on(d)
         sleep(SOLENOID_ON_TIME)
         solenoid_mux.off(d)
-        sleep(interdigit_delay / 3)
+        sleep(arp_interdigit_delay)
 
 def init_i2c():
     import board
