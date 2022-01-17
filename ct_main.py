@@ -1,6 +1,5 @@
 """The main Chime Time program. Run this at system startup
 to run your clock."""
-from ct_button import CTButton
 from ct_config import CTConfig
 from ct_mappings import ct1_led_map, ct1_solenoid_map
 from ct_mux import CTMux
