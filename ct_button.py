@@ -1,8 +1,15 @@
+from abc import ABC, abstractmethod
 import logging
 import random
 
 
-class CTButton:
+class CTButton(ABC):
+
+    @abstractmethod
+    def is_pressed(self) -> bool:
+        pass
+
+class RealButton(CTButton):
     def __init__(self, pin: int):
         from gpiozero import Button
         logging.info(f'Initializing CT button on GPIO pin {pin}...')
@@ -12,7 +19,7 @@ class CTButton:
     def is_pressed(self):
         return self.button.is_pressed
 
-class FakeButton:
+class FakeButton(CTButton):
     def __init__(self, pin):
         logging.info(f'Initializing fake CT button on pin {pin}...')
 

@@ -1,9 +1,9 @@
 """The main Chime Time program. Run this at system startup
 to run your clock."""
-from ct_button import CTButton, FakeButton
+from ct_button import RealButton, FakeButton
 from ct_config import CTConfig
 from ct_mappings import ct1_led_map, ct1_solenoid_map
-from ct_mux import CTMux, FakeMux
+from ct_mux import RealMux, FakeMux
 from ct_time import CTTime
 
 import argparse
@@ -74,9 +74,9 @@ def main():
         button = FakeButton(CT_BUTTON_GPIO_PIN)
     else:
         i2c = init_i2c()
-        solenoid_mux = CTMux(i2c, SOLENOID_MUX_ADDR, ct1_solenoid_map)
-        led_mux = CTMux(i2c, LED_MUX_ADDR, ct1_led_map)
-        button = CTButton(CT_BUTTON_GPIO_PIN)
+        solenoid_mux = RealMux(i2c, SOLENOID_MUX_ADDR, ct1_solenoid_map)
+        led_mux = RealMux(i2c, LED_MUX_ADDR, ct1_led_map)
+        button = RealButton(CT_BUTTON_GPIO_PIN)
     def all_off():
         logging.info('Turning off all mux outputs.')
         for m in (solenoid_mux, led_mux):
