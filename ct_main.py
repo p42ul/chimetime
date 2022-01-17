@@ -52,7 +52,7 @@ def init_i2c():
 
 def args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', help='Config file location.')
+    parser.add_argument('--config', type=str, help='Config file location.')
     return parser.parse_args()
 
 
