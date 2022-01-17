@@ -15,6 +15,7 @@ ct1_solenoid_map = {
 }
 
 ct1_led_map = {
+        0: None,
         1: 0,
         2: 1,
         3: 2,
@@ -28,5 +29,3 @@ ct1_led_map = {
         11: 12,
         12: 11,
         }
-
-ct_button_gpio_pin = 21
