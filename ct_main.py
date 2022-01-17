@@ -1,6 +1,7 @@
 """The main Chime Time program. Run this at system startup
 to run your clock."""
 from ct_button import CTButton
+from ct_config import CTConfig
 from ct_mappings import ct1_led_map, ct1_solenoid_map
 from ct_mux import CTMux
 from ct_time import CTTime
@@ -50,7 +51,7 @@ def init_i2c():
     logging.info('I2C initialized.')
     return i2c
 
-def args():
+def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, help='Config file location.')
     return parser.parse_args()
@@ -59,6 +60,8 @@ def args():
 def main():
     logging.basicConfig(level=logging.DEBUG)
     logging.info('Starting Chime Time...')
+    args = get_args()
+    config = CTConfig(args.config)
     i2c = init_i2c()
     solenoid_mux = CTMux(i2c, SOLENOID_MUX_ADDR, ct1_solenoid_map)
     led_mux = CTMux(i2c, LED_MUX_ADDR, ct1_led_map)
