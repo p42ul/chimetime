@@ -43,6 +43,11 @@ print("done!")
 EOF
 python3 blinkatest.py
 sudo pip3 install adafruit-circuitpython-mcp230xx
+
+# Create and start the Chime Time service.
+sudo cp chimetime.service /etc/systemd/system
+sudo systemctl daemon-reload
+sudo systemctl enable chimetime.service
 ```
 
 
