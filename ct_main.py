@@ -12,6 +12,7 @@ import signal
 import sys
 from time import sleep
 
+logging.basicConfig(level=logging.DEBUG)
 
 SOLENOID_MUX_ADDR = 0x20
 LED_MUX_ADDR = 0x24
@@ -64,8 +65,6 @@ def main():
     config = CTConfig(args.config)
     polling_interval = config['polling_interval']
     clock = CTTime()
-    logging.basicConfig(level=logging.DEBUG)
-    logging.info(f'config file path: {args.config}')
     logging.info('Starting Chime Time...')
     if args.fake:
         i2c = None

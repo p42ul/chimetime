@@ -13,7 +13,7 @@ sudo apt upgrade
 sudo apt install git python3-gpiozero python3-pip 
 
 # Install Python packages.
-sudo pip3 install --upgrade setuptools adafruit-circuitpython-mcp230xx adafruit-python-shell
+sudo pip3 install --upgrade setuptools adafruit-circuitpython-mcp230xx adafruit-python-shell watchdog
 
 # Install and test CircuitPython Blinka.
 # From https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi.

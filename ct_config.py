@@ -1,5 +1,13 @@
+import asyncio
 import configparser
+import logging
 import os
+import time
+from threading import Thread
+
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 
 # Default config file path.
 CONFIG_PATH = 'config.ini'
@@ -7,14 +15,32 @@ CONFIG_PATH = 'config.ini'
 CONFIG_SECTION = 'chimetime'
 
 class CTConfig:
-    def __init__(self, path=None):
+    def __init__(self, path=None, autoreload=True):
         if path is None:
-            path = CONFIG_PATH
+            curdir = os.path.abspath(os.path.dirname(__file__))
+            path = os.path.join(curdir, CONFIG_PATH)
         if not os.path.exists(path):
             raise FileNotFoundError(f"Can't open {path} for reading.")
         self.load_config(path)
+        if autoreload:
+            t = Thread(target=self.autoreload, args=[path], daemon=True)
+            t.start()
+
+    def print_it(self, p):
+        print(p)
+
+    # Autoreload function to be called in a thread.
+    def autoreload(self, path):
+        observer = Observer()
+        event_handler = AutoReloadEventHandler(
+            self.load_config, args=[path], filename=path)
+        observer.schedule(event_handler, os.path.dirname(path), recursive=False)
+        observer.start()
+        while True:
+            time.sleep(1)
 
     def load_config(self, path):
+        logging.info(f'reading config file at {path}')
         config = configparser.ConfigParser()
         config.read(path)
         config = config[CONFIG_SECTION]
@@ -49,3 +75,14 @@ class CTConfig:
 
     def __getitem__(self, key):
         return self.config[key]
+
+
+class AutoReloadEventHandler(FileSystemEventHandler):
+    def __init__(self, callback, args, filename):
+        self.callback = callback
+        self.args = args
+        self.filename = filename
+
+    def on_modified(self, event):
+        if event.src_path == self.filename:
+            self.callback(*self.args)
