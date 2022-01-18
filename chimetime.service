@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 User=pi
-ExecStart=/usr/bin/python3 /home/pi/chimetime/ct_main.py
+ExecStart=/usr/bin/python3 /home/pi/chimetime/ct_main.py --config /home/pi/chimetime/config.ini
 Restart=always
 
 [Install]

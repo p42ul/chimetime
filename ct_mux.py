@@ -24,8 +24,10 @@ class RealMux(CTMux):
         logging.info(f'Multiplexer at address {hex(address)} initialized.')
         self.mux = mux
         self.mappings = mappings
-        for i in self.mappings.values():
-            pin = self.mux.get_pin(i)
+        for v in self.mappings.values():
+            if v is None:
+                continue
+            pin = self.mux.get_pin(v)
             pin.direction = Direction.OUTPUT
             pin.value = False
 
@@ -41,9 +43,8 @@ class RealMux(CTMux):
         self._set(num, False)
 
     def all_off(self):
-        for pin in [self.mux.get_pin(p) for p in self.mappings.values()]:
-            pin.value = False
-        
+        for num in self.mappings.keys():
+            self._set(num, False)
 class FakeMux(CTMux):
     def __init__(self, i2c, address, mappings):
         logging.info(f'Initializing fake mux at address {hex(address)}...')
