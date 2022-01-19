@@ -9,42 +9,35 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 
-# Default config file path.
-CONFIG_PATH = 'config.ini'
 # The section header name to read.
 CONFIG_SECTION = 'chimetime'
 
 class CTConfig:
-    def __init__(self, path=None, autoreload=True):
-        if path is None:
-            curdir = os.path.abspath(os.path.dirname(__file__))
-            path = os.path.join(curdir, CONFIG_PATH)
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"Can't open {path} for reading.")
-        self.load_config(path)
+    def __init__(self, config_path, autoreload=True):
+        config_path = os.path.abspath(config_path)
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Can't open {config_path} for reading.")
+        self.load_config(config_path)
         if autoreload:
-            t = Thread(target=self.autoreload, args=[path], daemon=True)
+            t = Thread(target=self.autoreload, args=[config_path], daemon=True)
             t.start()
 
-    def print_it(self, p):
-        print(p)
-
     # Autoreload function to be called in a thread.
-    def autoreload(self, path):
+    def autoreload(self, config_path):
         observer = Observer()
         event_handler = AutoReloadEventHandler(
-            self.load_config, args=[path], filename=path)
-        observer.schedule(event_handler, os.path.dirname(path), recursive=False)
+            self.load_config, args=[config_path], filename=config_path)
+        observer.schedule(event_handler, os.path.dirname(config_path), recursive=False)
         observer.start()
         while True:
             time.sleep(1)
 
-    def load_config(self, path):
-        logging.info(f'reading config file at {path}')
+    def load_config(self, config_path):
+        logging.info(f'reading config file at {config_path}')
         config = configparser.ConfigParser()
-        config.read(path)
-        config = config[CONFIG_SECTION]
-        self.config = self.parse_config(config)
+        config.read(config_path)
+        config_section = config[CONFIG_SECTION]
+        self.config = self.parse_config_section(config_section)
 
     def default_config(self):
         # If you change a value here, be sure to add it to the
@@ -56,19 +49,19 @@ class CTConfig:
                 'arp_interdigit_delay': 0.15,
                 }
 
-    def parse_config(self, config):
+    def parse_config_section(self, config_section):
         ret = self.default_config()
         for k, v in self.default_config().items():
             t = type(v)
             maybe = None
             if t is bool:
-                maybe = config.getboolean(k)
+                maybe = config_section.getboolean(k)
             elif t is float:
-                maybe = config.getfloat(k)
+                maybe = config_section.getfloat(k)
             elif t is int:
-                maybe = config.getint(k)
+                maybe = config_section.getint(k)
             else:
-                maybe = config.get(k)
+                maybe = config_section.get(k)
             if maybe is not None:
                 ret[k] = maybe
         return ret
