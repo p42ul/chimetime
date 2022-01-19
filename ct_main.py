@@ -7,8 +7,8 @@ from ct_mux import RealMux, FakeMux
 from ct_time import CTTime
 
 import argparse
+import atexit
 import logging
-import signal
 import sys
 from time import sleep
 
@@ -75,12 +75,8 @@ class CT:
         self.solenoid_mux = Mux(self.i2c, SOLENOID_MUX_ADDR, ct1_solenoid_map)
         self.led_mux = Mux(self.i2c, LED_MUX_ADDR, ct1_led_map)
         self.button = Button(CT_BUTTON_GPIO_PIN)
-        def exit_handler(signo, frame):
-            logging.info('detected signal {signal.strsignal(signo)}')
-            all_off()
-            sys.exit(0)
         self.all_off()
-        signal.signal(signal.SIGTERM, exit_handler)
+        atexit.register(self.all_off)
 
     def run(self):
         logging.info('entering main CT loop...')

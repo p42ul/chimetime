@@ -2,7 +2,7 @@ from ct_main import CT
 
 import threading
 
-from flask import Flask
+from flask import Flask, json, request
 
 
 def app_factory(config_path, fake):
@@ -17,9 +17,29 @@ def app_factory(config_path, fake):
 
     @app.route('/press')
     def press():
-        t = threading.Thread(target=ct.button_press_handler, daemon=True)
-        t.start()
-        return 'you pressed the button, bitch'
+        def generate():
+            yield 'chiming the time...'
+            ct.button_press_handler()
+            yield 'you pressed the button, bitch'
+        return app.response_class(generate())
+
+    @app.route('/save_config', methods=['POST'])
+    def save_config():
+        old_config = ct.config.as_dict()
+        new_config = ct.config.as_dict()
+        for k, v in old_config.items():
+            t = type(v)
+            if t is bool:
+                t = lambda x: True if x.lower() == 'true' else False
+            new_value = t(request.form.get(k, v))
+            new_config[k] = new_value
+        ct.config.save_config(new_config)
+        return 'config saved'
+
+
+    @app.route('/load_config')
+    def load_config():
+        return json.jsonify(ct.config.as_dict())
 
     return app
 

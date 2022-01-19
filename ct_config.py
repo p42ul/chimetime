@@ -1,5 +1,5 @@
 import asyncio
-import configparser
+import json
 import logging
 import os
 import time
@@ -8,36 +8,37 @@ from threading import Thread
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-
-# The section header name to read.
-CONFIG_SECTION = 'chimetime'
-
 class CTConfig:
     def __init__(self, config_path, autoreload=True):
         config_path = os.path.abspath(config_path)
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"Can't open {config_path} for reading.")
-        self.load_config(config_path)
+        self.config_path = config_path
+        self.config = None # reminder that this member exists
+        self.load_config() # sets self.config
         if autoreload:
-            t = Thread(target=self.autoreload, args=[config_path], daemon=True)
+            t = Thread(target=self.autoreload, daemon=True)
             t.start()
 
     # Autoreload function to be called in a thread.
-    def autoreload(self, config_path):
+    def autoreload(self):
         observer = Observer()
-        event_handler = AutoReloadEventHandler(
-            self.load_config, args=[config_path], filename=config_path)
-        observer.schedule(event_handler, os.path.dirname(config_path), recursive=False)
+        event_handler = AutoReloadEventHandler(self.load_config, filename=self.config_path, args=[])
+        observer.schedule(event_handler, os.path.dirname(self.config_path), recursive=False)
         observer.start()
+        logging.info('Config autoreload daemon thread started.')
         while True:
             time.sleep(1)
 
-    def load_config(self, config_path):
-        logging.info(f'reading config file at {config_path}')
-        config = configparser.ConfigParser()
-        config.read(config_path)
-        config_section = config[CONFIG_SECTION]
-        self.config = self.parse_config_section(config_section)
+    def load_config(self):
+        logging.info(f'reading config file at {self.config_path}')
+        with open(self.config_path, 'r') as f:
+            text = f.read()
+            self.config = json.loads(text)
+
+    def save_config(self, config: dict):
+        with open(self.config_path, 'w') as f:
+            f.write(json.dumps(config))
 
     def default_config(self):
         # If you change a value here, be sure to add it to the
@@ -49,22 +50,8 @@ class CTConfig:
                 'arp_interdigit_delay': 0.15,
                 }
 
-    def parse_config_section(self, config_section):
-        ret = self.default_config()
-        for k, v in self.default_config().items():
-            t = type(v)
-            maybe = None
-            if t is bool:
-                maybe = config_section.getboolean(k)
-            elif t is float:
-                maybe = config_section.getfloat(k)
-            elif t is int:
-                maybe = config_section.getint(k)
-            else:
-                maybe = config_section.get(k)
-            if maybe is not None:
-                ret[k] = maybe
-        return ret
+    def as_dict(self):
+        return self.config
 
     def __getitem__(self, key):
         return self.config[key]
