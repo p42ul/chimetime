@@ -24,6 +24,5 @@ class FakeButton(CTButton):
         logging.info(f'Initializing fake CT button on pin {pin}...')
 
     def is_pressed(self):
-        return False
-        # Roll a six sided die.
-        return random.randint(1,6) == 6
+        input('waiting for input to create fake button press...')
+        return True
