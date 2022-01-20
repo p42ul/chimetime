@@ -4,7 +4,10 @@ After=multi-user.target
 
 [Service]
 User=pi
-ExecStart=/usr/bin/python3 /home/pi/chimetime/ct_main.py --config /home/pi/chimetime/config.ini
+WorkingDirectory=/home/pi/chimetime
+Environment=FLASK_APP="ct_webserver:app_factory('config.json', False)"
+Environment=FLASK_ENV=production
+ExecStart=/usr/bin/python3 -m flask run --host=0.0.0.0
 Restart=always
 
 [Install]
