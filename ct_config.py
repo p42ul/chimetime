@@ -45,7 +45,6 @@ class CTConfig:
         # included config.ini file, and vice versa.
         return {'play_arp': True,
                 'arp_delay': 1.0,
-                'polling_interval': 0.01,
                 'interdigit_delay': 0.5,
                 'arp_interdigit_delay': 0.15,
                 }

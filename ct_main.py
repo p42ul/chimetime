@@ -19,6 +19,7 @@ LED_MUX_ADDR = 0x24
 CT_BUTTON_GPIO_PIN = 21
 
 SOLENOID_ON_TIME = 0.1
+POLLING_INTERVAL = 0.01
 
 MAJOR_ARP = [1, 3, 5, 8]
 
@@ -61,7 +62,6 @@ class CT:
 
     def __init__(self, config_path, fake=False):
         self.config = CTConfig(config_path, autoreload=True)
-        self.polling_interval = self.config['polling_interval']
         self.clock = CTTime()
         logging.info('Starting Chime Time...')
         if not fake:
@@ -83,4 +83,4 @@ class CT:
         while True:
             if self.button.is_pressed():
                 self.button_press_handler()
-            sleep(self.polling_interval)
+            sleep(POLLING_INTERVAL)

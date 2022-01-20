@@ -1,8 +1,9 @@
 from ct_main import CT
 
 import threading
+from datetime import datetime
 
-from flask import Flask, json, request
+from flask import Flask, json, render_template, request, send_from_directory
 
 
 def app_factory(config_path, fake):
@@ -13,14 +14,18 @@ def app_factory(config_path, fake):
 
     @app.route('/')
     def hello():
-        return 'hello werld'
+        return render_template('index.html')
 
-    @app.route('/press')
+    @app.route('/static/<path:path>')
+    def send_static(path):
+        return send_from_directory('static', path)
+
+    @app.route('/chime')
     def press():
         def generate():
-            yield 'chiming the time...'
+            yield 'chiming the time... '
             ct.button_press_handler()
-            yield 'you pressed the button, bitch'
+            yield f'done at {datetime.now()}'
         return app.response_class(generate())
 
     @app.route('/save_config', methods=['POST'])
@@ -30,11 +35,13 @@ def app_factory(config_path, fake):
         for k, v in old_config.items():
             t = type(v)
             if t is bool:
-                t = lambda x: True if x.lower() == 'true' else False
-            new_value = t(request.form.get(k, v))
+                value = request.form.get(k, None)
+                new_value = True if value is not None else False
+            else:
+                new_value = t(request.form.get(k, v))
             new_config[k] = new_value
         ct.config.save_config(new_config)
-        return 'config saved'
+        return f'Config saved at {datetime.now()}'
 
 
     @app.route('/load_config')
