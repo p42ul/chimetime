@@ -32,6 +32,9 @@ print("SPI ok!")
 EOF
 python3 blinkatest.py
 
+# Use our default config file
+cp default_config.json config.json
+
 # Create and start the Chime Time service.
 sudo cp chimetime.service /etc/systemd/system
 sudo systemctl daemon-reload

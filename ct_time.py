@@ -17,3 +17,18 @@ class CTTime:
         hour, minute = self.get_current_time()
         minute_digits = [int(d) for d in str(minute)]
         return [hour] + minute_digits
+
+    def run_hourly(self, callback):
+        next_hour = datetime.now().hour + 1
+        if next_hour > 12: # For 12-hour time.
+            next_hour -= 12
+        while True:
+            now = datetime.now()
+            hour = now.hour
+            if hour > 12:
+                hour -= 12
+            if hour == next_hour:
+                callback(now)
+                next_hour = hour + 1
+            sleep(1)
+

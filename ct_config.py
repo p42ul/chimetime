@@ -38,16 +38,7 @@ class CTConfig:
 
     def save_config(self, config: dict):
         with open(self.config_path, 'w') as f:
-            f.write(json.dumps(config))
-
-    def default_config(self):
-        # If you change a value here, be sure to add it to the
-        # included config.ini file, and vice versa.
-        return {'play_arp': True,
-                'arp_delay': 1.0,
-                'interdigit_delay': 0.5,
-                'arp_interdigit_delay': 0.15,
-                }
+            f.write(json.dumps(config, indent=2)) # indent to make it easier to read
 
     def as_dict(self):
         return self.config

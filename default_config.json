@@ -1,0 +1,8 @@
+{
+  "play_arp": true,
+  "arp_delay": 1.75,
+  "arp_interdigit_delay": 0.15,
+  "interdigit_delay": 0.5,
+  "grandfather_mode": false,
+  "grandfather_delay":  2
+}

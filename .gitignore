@@ -2,3 +2,5 @@
 *.pyc
 
 .vs/
+
+config.json
