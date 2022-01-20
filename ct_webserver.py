@@ -21,10 +21,18 @@ def app_factory(config_path, fake):
         return send_from_directory('static', path)
 
     @app.route('/chime')
-    def press():
+    def chime():
         def generate():
             yield 'chiming the time... '
             ct.button_press_handler()
+            yield f'done at {datetime.now()}'
+        return app.response_class(generate())
+
+    @app.route('/chime_grandfather')
+    def chime_grandfather():
+        def generate():
+            yield 'grandfather clocking...'
+            ct.play_grandfather(datetime.now())
             yield f'done at {datetime.now()}'
         return app.response_class(generate())
 
