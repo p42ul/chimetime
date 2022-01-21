@@ -24,5 +24,5 @@ class FakeButton(CTButton):
         logging.info(f'Initializing fake CT button on pin {pin}...')
 
     def is_pressed(self):
-        input('waiting for input to create fake button press...')
+        input('waiting for input to create fake button press...\n')
         return True

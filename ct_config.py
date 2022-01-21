@@ -1,5 +1,5 @@
 import asyncio
-import configparser
+import json
 import logging
 import os
 import time
@@ -8,70 +8,49 @@ from threading import Thread
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-
-# Default config file path.
-CONFIG_PATH = 'config.ini'
-# The section header name to read.
-CONFIG_SECTION = 'chimetime'
-
 class CTConfig:
-    def __init__(self, path=None, autoreload=True):
-        if path is None:
-            curdir = os.path.abspath(os.path.dirname(__file__))
-            path = os.path.join(curdir, CONFIG_PATH)
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"Can't open {path} for reading.")
-        self.load_config(path)
+    def __init__(self, config_path, autoreload=True):
+        config_path = os.path.abspath(config_path)
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Can't open {config_path} for reading.")
+        self.config_path = config_path
+        self.config = None # reminder that this member exists
+        self.load_config() # sets self.config
         if autoreload:
-            t = Thread(target=self.autoreload, args=[path], daemon=True)
+            t = Thread(target=self.autoreload, daemon=True)
             t.start()
 
-    def print_it(self, p):
-        print(p)
-
     # Autoreload function to be called in a thread.
-    def autoreload(self, path):
+    def autoreload(self):
         observer = Observer()
-        event_handler = AutoReloadEventHandler(
-            self.load_config, args=[path], filename=path)
-        observer.schedule(event_handler, os.path.dirname(path), recursive=False)
+        event_handler = AutoReloadEventHandler(self.load_config, filename=self.config_path, args=[])
+        observer.schedule(event_handler, os.path.dirname(self.config_path), recursive=False)
         observer.start()
+        logging.info('Config autoreload daemon thread started.')
         while True:
             time.sleep(1)
 
-    def load_config(self, path):
-        logging.info(f'reading config file at {path}')
-        config = configparser.ConfigParser()
-        config.read(path)
-        config = config[CONFIG_SECTION]
-        self.config = self.parse_config(config)
+    def load_config(self):
+        logging.info(f'reading config file at {self.config_path}')
+        with open(self.config_path, 'r') as f:
+            text = f.read()
+            self.config = json.loads(text)
+
+    def save_config(self, config: dict):
+        with open(self.config_path, 'w') as f:
+            f.write(json.dumps(config))
 
     def default_config(self):
         # If you change a value here, be sure to add it to the
         # included config.ini file, and vice versa.
         return {'play_arp': True,
                 'arp_delay': 1.0,
-                'polling_interval': 0.01,
                 'interdigit_delay': 0.5,
                 'arp_interdigit_delay': 0.15,
                 }
 
-    def parse_config(self, config):
-        ret = self.default_config()
-        for k, v in self.default_config().items():
-            t = type(v)
-            maybe = None
-            if t is bool:
-                maybe = config.getboolean(k)
-            elif t is float:
-                maybe = config.getfloat(k)
-            elif t is int:
-                maybe = config.getint(k)
-            else:
-                maybe = config.get(k)
-            if maybe is not None:
-                ret[k] = maybe
-        return ret
+    def as_dict(self):
+        return self.config
 
     def __getitem__(self, key):
         return self.config[key]

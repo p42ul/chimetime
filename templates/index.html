@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Chime Time Control Panel">
+
+    <title>Chime Time Control Panel</title>
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+    <script type="text/javascript">
+        function load_data(data) {
+            const form = document.getElementById("ct-form");
+            for (k in data) {
+                if (k in form.elements) {
+                    if (form.elements[k].type === 'checkbox') {
+                        form.elements[k].checked = data[k]
+                    } else {
+                        form.elements[k].value = data[k];
+                    }
+                }
+            }
+        }
+
+        fetch('/load_config')
+            .then(response => response.json())
+            .then(data => load_data(data));
+    </script>
+</head>
+
+<body>
+    <div class="content">
+        <form class="form-inline" action="/save_config" method="post" target="result" id="ct-form">
+            <div>
+                <label for="interdigit_delay">Interdigit Delay</label>
+                <input type="number" step="0.01" id="interdigit_delay" name="interdigit_delay" />
+            </div>
+            <div>
+                <!--<label for="arp_on">Arp On</label>
+                <input type="radio" id="arp_on" name="play_arp" value="on"/>
+                <label for="arp_off">Arp Off</label>
+                <input type="radio" id="arp_off" name="play_arp" value="off" />-->
+                <label for="play_arp">Play Arp</label>
+                <input type="checkbox" id="play_arp" name="play_arp" />
+            </div>
+            <div>
+                <label for="arp_interdigit_delay">Arp Interdigit Delay</label>
+                <input type="number" step="0.01" name="arp_interdigit_delay" id="arp_interdigit_delay" />
+            </div>
+            <div>
+                <label for="arp_delay">Arp Delay</label>
+                <input type="number" step="0.01" id="arp_delay" name="arp_delay" />
+            </div>            
+            <input type="submit" id="submit_button" />
+        </form>
+        <a href="/chime" target="result">Chime Now</a>
+    </div>
+    <iframe name="result"></iframe>
+</body>
+
+</html>
