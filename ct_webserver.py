@@ -24,7 +24,7 @@ def app_factory(config_path, fake):
     def chime():
         def generate():
             yield 'chiming the time... '
-            ct.button_press_handler()
+            ct.chime_the_time()
             yield f'done at {datetime.now()}'
         return app.response_class(generate())
 
