@@ -36,6 +36,14 @@ def app_factory(config_path, fake):
             yield f'done at {datetime.now()}'
         return app.response_class(generate())
 
+    @app.route('/chime_test')
+    def chime_test():
+        def generate():
+            yield 'playing all chimes...'
+            ct.play_test()
+            yield f'done at {datetime.now()}'
+        return app.response_class(generate())
+
     @app.route('/save_config', methods=['POST'])
     def save_config():
         old_config = ct.config.as_dict()

@@ -59,6 +59,13 @@ class CT:
             self.solenoid_mux.off(degree)
             sleep(arp_interdigit_delay)
 
+    def play_test(self):
+        for k in ct1_solenoid_map:
+            self.solenoid_mux.on(k)
+            sleep(SOLENOID_ON_TIME)
+            self.solenoid_mux.off(k)
+            sleep(self.config['interdigit_delay'])
+
     def init_i2c(self):
         import board
         import busio
