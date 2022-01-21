@@ -26,7 +26,7 @@ POLLING_INTERVAL = 0.01
 MAJOR_ARP = [1, 3, 5, 8]
 
 class CT:
-    def chime_the_time(self, dt: datetime):
+    def chime_the_time(self):
         interdigit_delay = self.config['interdigit_delay']
         digits = self.clock.get_time_digits()
         if self.config['play_arp']:

@@ -4,5 +4,5 @@
   "arp_interdigit_delay": 0.15,
   "interdigit_delay": 0.5,
   "grandfather_mode": false,
-  "grandfather_delay":  2
+  "grandfather_delay":  2.0
 }
