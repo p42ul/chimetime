@@ -33,11 +33,8 @@ class CT:
             self.play_arp()
             sleep(self.config['arp_delay'])
         for d in digits:
-            self.solenoid_mux.on(d)
-            self.led_mux.on(d)
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(d)
-            self.led_mux.off(d)
+            self.async_blip(self.solenoid_mux, d, SOLENOID_ON_TIME)
+            self.async_blip(self.led_mux, d, self.config['led_on_time'])
             sleep(interdigit_delay)
 
     def play_grandfather(self, dt: datetime):
@@ -48,25 +45,23 @@ class CT:
             hour -= 12
         delay = self.config['grandfather_delay']
         for _ in range(hour):
-            self.solenoid_mux.on(0)
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(0)
+            self.async_blip(self.solenoid_mux, 0, SOLENOID_ON_TIME)
             sleep(delay)
 
     def play_arp(self):
         arp_interdigit_delay = self.config['arp_interdigit_delay']
         for degree in MAJOR_ARP:
-            self.solenoid_mux.on(degree)
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(degree)
+            self.async_blip(self.solenoid_mux, degree, SOLENOID_ON_TIME)
             sleep(arp_interdigit_delay)
 
     def play_test(self):
         for k in ct1_solenoid_map:
-            self.solenoid_mux.on(k)
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(k)
+            self.async_blip(self.solenoid_mux, k, SOLENOID_ON_TIME)
             sleep(self.config['interdigit_delay'])
+
+    def async_blip(self, mux, d, wait):
+        mux.on(d)
+        self.clock.do_delayed(d, mux.off, d)
 
     def init_i2c(self):
         import board

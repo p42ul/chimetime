@@ -20,6 +20,15 @@ class CTTime:
         minute_digits = [int(d) for d in str(minute)]
         return [hour] + minute_digits
 
+    def do_delayed(self, delay, callback, *args):
+        def f():
+            sleep(delay)
+            callback(*args)
+        t = threading.Thread(target=f, daemon=True)
+        t.start()
+        return t
+
+    # callback is a function that takes a single argument: the current time
     def run_hourly(self, callback):
         def f():
             next_hour = datetime.now().hour + 1
