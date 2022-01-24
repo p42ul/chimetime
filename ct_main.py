@@ -41,6 +41,8 @@ class CT:
             sleep(interdigit_delay)
 
     def play_grandfather(self, dt: datetime):
+        if not self.config['grandfather_mode']:
+            return
         hour = dt.hour
         if hour > 12:
             hour -= 12
@@ -79,11 +81,13 @@ class CT:
             m.all_off()
 
     def __init__(self, config_path, fake=False):
-        self.config = CTConfig(config_path, autoreload=True)
+        self.config = CTConfig(config_path)
         self.clock = CTTime()
-        if self.config['grandfather_mode']:
-            t = threading.Thread(target=self.clock.run_hourly, args=[self.play_grandfather], daemon=True)
-            t.start()
+        self.solenoid_mux = None
+        self.led_mux = None
+        self.button = None
+        # We just run this, and it checks the config at chime time.
+        self.clock.run_hourly(self.play_grandfather)
         if not fake:
             self.i2c = self.init_i2c()
             Mux = RealMux

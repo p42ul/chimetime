@@ -1,6 +1,12 @@
+from pydub import AudioSegment
+from pydub.playback import play
 from abc import ABC, abstractmethod
-import logging
 
+import logging
+import os
+import threading
+
+SOLENOID_MUX_ADDR = 0x20
 
 class CTMux(ABC):
     @abstractmethod
@@ -50,6 +56,8 @@ class FakeMux(CTMux):
         logging.info(f'Initializing fake mux at address {hex(address)}...')
         self.mappings = mappings
         self.address = address
+        if self.address == SOLENOID_MUX_ADDR:
+            self.tones = {num: AudioSegment.from_mp3(os.path.abspath(f'tones/{num}.mp3')) for num in range(13)}
         # Needed to keep track of the state of the mux.
         self.state = {k: False for k in self.mappings.keys()}
 
@@ -60,6 +68,9 @@ class FakeMux(CTMux):
             logging.info(f'{hex(self.address)} {num} -> {pin} is now {value}')
 
     def on(self, num: int):
+        if self.address == SOLENOID_MUX_ADDR:
+            t = threading.Thread(target=play, args=(self.tones[num],))
+            t.start()
         self._set(num, True)
 
     def off(self, num: int):

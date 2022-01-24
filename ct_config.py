@@ -9,16 +9,15 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 class CTConfig:
-    def __init__(self, config_path, autoreload=True):
+    def __init__(self, config_path):
         config_path = os.path.abspath(config_path)
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"Can't open {config_path} for reading.")
         self.config_path = config_path
         self.config = None # reminder that this member exists
         self.load_config() # sets self.config
-        if autoreload:
-            t = Thread(target=self.autoreload, daemon=True)
-            t.start()
+        t = Thread(target=self.autoreload, daemon=True)
+        t.start()
 
     # Autoreload function to be called in a thread.
     def autoreload(self):
