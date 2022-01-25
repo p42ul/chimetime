@@ -2,6 +2,7 @@ from ct_main import CT
 
 import threading
 from datetime import datetime
+import logging
 
 from flask import Flask, json, render_template, request, send_from_directory
 
@@ -54,7 +55,11 @@ def app_factory(config_path, fake):
                 value = request.form.get(k, None)
                 new_value = True if value is not None else False
             else:
-                new_value = t(request.form.get(k, v))
+                possible_value = request.form.get(k, None)
+                if possible_value:
+                    new_value = t(possible_value)
+                else:
+                    new_value = v
             new_config[k] = new_value
         ct.config.save_config(new_config)
         return f'Config saved at {datetime.now()}'
