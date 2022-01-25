@@ -17,7 +17,7 @@ class CTTime:
 
     def get_time_digits(self):
         hour, minute = self.get_current_time()
-        minute_digits = [int(d) for d in str(minute)]
+        minute_digits = [int(d) for d in str(minute).zfill(2)]
         return [hour] + minute_digits
 
     def run_hourly(self, callback):
