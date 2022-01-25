@@ -30,7 +30,7 @@ class CTTime:
                 hour = now.hour
                 if hour > 12:
                     hour -= 12
-                if hour == next_hour:
+                if hour >= next_hour:
                     callback(now)
                     next_hour = hour + 1
                 sleep(1)

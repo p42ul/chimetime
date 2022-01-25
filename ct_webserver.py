@@ -6,6 +6,7 @@ import logging
 
 from flask import Flask, json, render_template, request, send_from_directory
 
+logging.basicConfig(level=logging.DEBUG)
 
 def app_factory(config_path, fake):
     app = Flask(__name__)
@@ -47,6 +48,7 @@ def app_factory(config_path, fake):
 
     @app.route('/save_config', methods=['POST'])
     def save_config():
+        logging.debug(request.form)
         old_config = ct.config.as_dict()
         new_config = ct.config.as_dict()
         for k, v in old_config.items():
@@ -64,10 +66,15 @@ def app_factory(config_path, fake):
         ct.config.save_config(new_config)
         return f'Config saved at {datetime.now()}'
 
-
     @app.route('/load_config')
     def load_config():
         return json.jsonify(ct.config.as_dict())
 
     return app
 
+
+# This should only be used for testing.
+# Use a real WSGI server in production.
+if __name__ == '__main__':
+    app = app_factory('config.json', fake=True)
+    app.run()

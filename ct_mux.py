@@ -4,10 +4,11 @@ if platform.system() == 'Windows':
 
 from abc import ABC, abstractmethod
 
+from ct_constants import SOLENOID_MUX_ADDR
+
 import logging
 import os
 
-SOLENOID_MUX_ADDR = 0x20
 
 class CTMux(ABC):
     @abstractmethod
@@ -26,9 +27,9 @@ class RealMux(CTMux):
     def __init__(self, i2c, address, mappings):
         from adafruit_mcp230xx.mcp23017 import MCP23017
         from digitalio import Direction
-        logging.info(f'Initializing multiplexer at address {hex(address)}...')
+        logging.debug(f'Initializing multiplexer at address {hex(address)}...')
         mux = MCP23017(i2c, address=address)
-        logging.info(f'Multiplexer at address {hex(address)} initialized.')
+        logging.debug(f'Multiplexer at address {hex(address)} initialized.')
         self.mux = mux
         self.mappings = mappings
         for v in self.mappings.values():

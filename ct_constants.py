@@ -29,3 +29,11 @@ ct1_led_map = {
         11: 12,
         12: 11,
         }
+
+MAJOR_ARP = [1, 3, 5, 8]
+
+SOLENOID_MUX_ADDR = 0x20
+LED_MUX_ADDR = 0x24
+CT_BUTTON_GPIO_PIN = 21
+SOLENOID_ON_TIME = 0.1
+POLLING_INTERVAL = 0.01

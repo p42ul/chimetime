@@ -2,7 +2,7 @@
 to run your clock."""
 from ct_button import RealButton, FakeButton
 from ct_config import CTConfig
-from ct_mappings import ct1_led_map, ct1_solenoid_map
+from ct_constants import ct1_led_map, ct1_solenoid_map, SOLENOID_MUX_ADDR, SOLENOID_ON_TIME, LED_MUX_ADDR, CT_BUTTON_GPIO_PIN, POLLING_INTERVAL, MAJOR_ARP
 from ct_mux import RealMux, FakeMux
 from ct_time import CTTime
 
@@ -14,16 +14,6 @@ import sys
 import threading
 from time import sleep
 
-logging.basicConfig(level=logging.DEBUG)
-
-SOLENOID_MUX_ADDR = 0x20
-LED_MUX_ADDR = 0x24
-CT_BUTTON_GPIO_PIN = 21
-
-SOLENOID_ON_TIME = 0.1
-POLLING_INTERVAL = 0.01
-
-MAJOR_ARP = [1, 3, 5, 8]
 
 class CT:
     def led_off_delay(self, digit):
