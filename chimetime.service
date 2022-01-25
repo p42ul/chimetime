@@ -5,9 +5,8 @@ After=multi-user.target
 [Service]
 User=pi
 WorkingDirectory=/home/pi/chimetime
-Environment=FLASK_APP="ct_webserver:app_factory('config.json', False)"
-Environment=FLASK_ENV=production
-ExecStart=/usr/bin/python3 -m flask run --host=0.0.0.0
+ExecStart=/usr/bin/python3 -m gunicorn --bind=0.0.0.0:5000 --workers=2 "ct_webserver:app_factory('config.json', fake=False)"
+
 Restart=always
 
 [Install]
