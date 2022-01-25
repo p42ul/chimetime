@@ -1,10 +1,11 @@
-from pydub import AudioSegment
-from pydub.playback import play
+import platform
+if platform.system() == 'Windows':
+    import winsound
+
 from abc import ABC, abstractmethod
 
 import logging
 import os
-import threading
 
 SOLENOID_MUX_ADDR = 0x20
 
@@ -57,7 +58,7 @@ class FakeMux(CTMux):
         self.mappings = mappings
         self.address = address
         if self.address == SOLENOID_MUX_ADDR:
-            self.tones = {num: AudioSegment.from_mp3(os.path.abspath(f'tones/{num}.mp3')) for num in range(13)}
+            self.tones = {num: os.path.abspath(f'tones/{num}.wav') for num in range(13)}
         # Needed to keep track of the state of the mux.
         self.state = {k: False for k in self.mappings.keys()}
 
@@ -69,8 +70,7 @@ class FakeMux(CTMux):
 
     def on(self, num: int):
         if self.address == SOLENOID_MUX_ADDR:
-            t = threading.Thread(target=play, args=(self.tones[num],))
-            t.start()
+            winsound.PlaySound(self.tones[num], winsound.SND_FILENAME | winsound.SND_ASYNC)
         self._set(num, True)
 
     def off(self, num: int):
