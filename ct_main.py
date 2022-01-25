@@ -26,6 +26,11 @@ POLLING_INTERVAL = 0.01
 MAJOR_ARP = [1, 3, 5, 8]
 
 class CT:
+    def led_off_delay(self, digit):
+        delay = self.config['led_on_time']
+        sleep(delay)
+        self.led_mux.off(digit)
+
     def chime_the_time(self):
         interdigit_delay = self.config['interdigit_delay']
         digits = self.clock.get_time_digits()
@@ -35,9 +40,10 @@ class CT:
         for d in digits:
             self.solenoid_mux.on(d)
             self.led_mux.on(d)
+            t = threading.Thread(target=self.led_off_delay, args=[d])
+            t.start()
             sleep(SOLENOID_ON_TIME)
             self.solenoid_mux.off(d)
-            self.led_mux.off(d)
             sleep(interdigit_delay)
 
     def play_grandfather(self, dt: datetime):
