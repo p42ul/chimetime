@@ -58,10 +58,13 @@ class CT:
             sleep(arp_interdigit_delay)
 
     def play_test(self):
-        for k in ct1_solenoid_map:
-            self.solenoid_mux.on(k)
+        for d in range(12 + 1):
+            self.solenoid_mux.on(d)
+            self.led_mux.on(d)
+            t = threading.Thread(target=self.led_off_delay, args=[d])
+            t.start()
             sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(k)
+            self.solenoid_mux.off(d)
             sleep(self.config['interdigit_delay'])
 
     def init_i2c(self):
