@@ -15,7 +15,7 @@ class CTTime:
     def minute_to_closest_12th(self, minute: int):
         return round(minute / 5)
 
-    def get_time_digits(self):
+    def get_time_digits(self) -> list:
         hour, minute = self.get_current_time()
         minute_digits = [int(d) for d in str(minute).zfill(2)]
         return [hour] + minute_digits
