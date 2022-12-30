@@ -24,6 +24,7 @@ class CT:
     def chime_the_time(self):
         interdigit_delay = self.config['interdigit_delay']
         digits = self.clock.get_time_digits()
+        sleep(self.config['pre_delay'])
         if self.config['play_arp']:
             self.play_arp()
             sleep(self.config['arp_delay'])
