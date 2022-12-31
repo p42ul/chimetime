@@ -6,7 +6,6 @@ from ct_constants import ct1_led_map, ct1_solenoid_map, SOLENOID_MUX_ADDR, SOLEN
 from ct_mux import RealMux, FakeMux
 from ct_time import CTTime
 
-import argparse
 import atexit
 from datetime import datetime
 import logging
@@ -29,9 +28,7 @@ class CT:
             self.play_arp()
             sleep(self.config['arp_delay'])
         for d in digits:
-            self.led_mux.on(d)
-            t = threading.Thread(target=self.led_off_delay, args=[d])
-            t.start()
+            self.flash_led(d)
             self.play_note(d)
             sleep(interdigit_delay)
 
@@ -57,11 +54,14 @@ class CT:
         sleep(SOLENOID_ON_TIME)
         self.solenoid_mux.off(d)
 
+    def flash_led(self, d):
+        self.led_mux.on(d)
+        threading.Thread(target=self.led_off_delay, args=[d]).start()
+
+
     def play_test(self):
         for d in range(12 + 1):
-            self.led_mux.on(d)
-            t = threading.Thread(target=self.led_off_delay, args=[d])
-            t.start()
+            self.flash_led(d)
             self.play_note(d)
             sleep(self.config['interdigit_delay'])
 
