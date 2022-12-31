@@ -1,4 +1,5 @@
 from ct_main import CT
+from ct_music import Music
 
 import threading
 from datetime import datetime
@@ -11,12 +12,19 @@ logging.basicConfig(level=logging.DEBUG)
 def app_factory(config_path, fake):
     app = Flask(__name__)
     ct = CT(config_path, fake)
+    music = Music(ct.play_note)
     thread = threading.Thread(target=ct.run, daemon=True)
     thread.start()
 
     @app.route('/')
     def hello():
         return render_template('index.html')
+
+    @app.route('/auld')
+    def auld():
+        yield 'playing a merry tune...'
+        music.auld()
+        yield 'happy new year!'
 
     @app.route('/static/<path:path>')
     def send_static(path):
