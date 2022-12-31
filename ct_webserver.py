@@ -22,9 +22,11 @@ def app_factory(config_path, fake):
 
     @app.route('/auld')
     def auld():
-        yield 'playing a merry tune...'
-        music.auld()
-        yield 'happy new year!'
+        def generate():
+            yield 'playing a merry tune...'
+            music.auld()
+            yield 'happy new year!'
+        return app.response_class(generate())
 
     @app.route('/static/<path:path>')
     def send_static(path):

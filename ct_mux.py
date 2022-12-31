@@ -1,6 +1,3 @@
-# Third-party libraries
-from playsound import playsound
-
 # Local libraries
 from ct_constants import SOLENOID_MUX_ADDR
 
@@ -56,6 +53,7 @@ class RealMux(CTMux):
             self._set(num, False)
 class FakeMux(CTMux):
     def __init__(self, i2c, address, mappings):
+        from playsound import playsound
         logging.info(f'Initializing fake mux at address {hex(address)}...')
         self.mappings = mappings
         self.address = address
