@@ -29,12 +29,10 @@ class CT:
             self.play_arp()
             sleep(self.config['arp_delay'])
         for d in digits:
-            self.solenoid_mux.on(d)
             self.led_mux.on(d)
             t = threading.Thread(target=self.led_off_delay, args=[d])
             t.start()
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(d)
+            self.play_note(d)
             sleep(interdigit_delay)
 
     def play_grandfather(self, dt: datetime):
@@ -45,27 +43,26 @@ class CT:
             hour -= 12
         delay = self.config['grandfather_delay']
         for _ in range(hour):
-            self.solenoid_mux.on(0)
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(0)
+            self.play_note(0)
             sleep(delay)
 
     def play_arp(self):
         arp_interdigit_delay = self.config['arp_interdigit_delay']
         for degree in MAJOR_ARP:
-            self.solenoid_mux.on(degree)
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(degree)
+            self.play_note(degree)
             sleep(arp_interdigit_delay)
+
+    def play_note(self, d):
+        self.solenoid_mux.on(d)
+        sleep(SOLENOID_ON_TIME)
+        self.solenoid_mux.off(d)
 
     def play_test(self):
         for d in range(12 + 1):
-            self.solenoid_mux.on(d)
             self.led_mux.on(d)
             t = threading.Thread(target=self.led_off_delay, args=[d])
             t.start()
-            sleep(SOLENOID_ON_TIME)
-            self.solenoid_mux.off(d)
+            self.play_note(d)
             sleep(self.config['interdigit_delay'])
 
     def init_i2c(self):

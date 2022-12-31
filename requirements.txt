@@ -1,2 +1,3 @@
 flask
+playsound==1.2.2
 watchdog

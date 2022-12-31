@@ -1,13 +1,14 @@
-import platform
-if platform.system() == 'Windows':
-    import winsound
+# Third-party libraries
+from playsound import playsound
 
-from abc import ABC, abstractmethod
-
+# Local libraries
 from ct_constants import SOLENOID_MUX_ADDR
 
+# Standard libraries
+from abc import ABC, abstractmethod
 import logging
 import os
+import threading
 
 
 class CTMux(ABC):
@@ -58,10 +59,11 @@ class FakeMux(CTMux):
         logging.info(f'Initializing fake mux at address {hex(address)}...')
         self.mappings = mappings
         self.address = address
-        if self.address == SOLENOID_MUX_ADDR:
-            self.tones = {num: os.path.abspath(f'tones/{num}.wav') for num in range(13)}
         # Needed to keep track of the state of the mux.
         self.state = {k: False for k in self.mappings.keys()}
+        if self.address != SOLENOID_MUX_ADDR:
+            return
+        self.tones = {num: os.path.abspath(f'tones/{num}.wav') for num in range(13)}
 
     def _set(self, num, value):
         self.state[num] = value
@@ -71,7 +73,7 @@ class FakeMux(CTMux):
 
     def on(self, num: int):
         if self.address == SOLENOID_MUX_ADDR:
-            winsound.PlaySound(self.tones[num], winsound.SND_FILENAME | winsound.SND_ASYNC)
+            threading.Thread(target=playsound, args=[self.tones[num]], daemon=True).start()
         self._set(num, True)
 
     def off(self, num: int):
