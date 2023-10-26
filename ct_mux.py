@@ -53,7 +53,6 @@ class RealMux(CTMux):
             self._set(num, False)
 class FakeMux(CTMux):
     def __init__(self, i2c, address, mappings):
-        from playsound import playsound
         logging.info(f'Initializing fake mux at address {hex(address)}...')
         self.mappings = mappings
         self.address = address
@@ -70,8 +69,6 @@ class FakeMux(CTMux):
             logging.info(f'{hex(self.address)} {num} -> {pin} is now {value}')
 
     def on(self, num: int):
-        if self.address == SOLENOID_MUX_ADDR:
-            threading.Thread(target=playsound, args=[self.tones[num]], daemon=True).start()
         self._set(num, True)
 
     def off(self, num: int):

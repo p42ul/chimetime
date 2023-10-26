@@ -9,9 +9,9 @@ from flask import Flask, json, render_template, request, send_from_directory
 
 logging.basicConfig(level=logging.DEBUG)
 
-def app_factory(config_path, fake):
+def app_factory(fake):
     app = Flask(__name__)
-    ct = CT(config_path, fake)
+    ct = CT(fake)
     music = Music(ct.play_note)
     thread = threading.Thread(target=ct.run, daemon=True)
     thread.start()
@@ -86,5 +86,5 @@ def app_factory(config_path, fake):
 # This should only be used for testing.
 # Use a real WSGI server in production.
 if __name__ == '__main__':
-    app = app_factory('config.json', fake=True)
+    app = app_factory(fake=True)
     app.run()

@@ -2,7 +2,7 @@
 to run your clock."""
 from ct_button import RealButton, FakeButton
 from ct_config import CTConfig
-from ct_constants import SOLENOID_MUX_ADDR, SOLENOID_ON_TIME, LED_MUX_ADDR, CT_BUTTON_GPIO_PIN, POLLING_INTERVAL, MAJOR_ARP
+from ct_constants import CONFIG_PATH, MAPPINGS_PATH, SOLENOID_MUX_ADDR, SOLENOID_ON_TIME, LED_MUX_ADDR, CT_BUTTON_GPIO_PIN, POLLING_INTERVAL, MAJOR_ARP
 from ct_mux import RealMux, FakeMux
 from ct_time import CTTime
 
@@ -78,18 +78,17 @@ class CT:
         for m in (self.solenoid_mux, self.led_mux):
             m.all_off()
 
-    def load_mapping(self, path, mapping) -> (dict, dict):
+    def load_mappings(self, path, mapping) -> (dict, dict):
         with open(path, 'r') as f:
             data = f.read()
-        j = json.loads(data)
-        j = j[mapping]
+        j = json.loads(data)[mapping]
         solenoids = {int(k): v for k,v in j['solenoid'].items()}
         leds = {int(k): v for k,v in j['led'].items()}
         return (solenoids, leds)
 
 
-    def __init__(self, config_path, fake=False):
-        self.config = CTConfig(config_path)
+    def __init__(self, fake=False):
+        self.config = CTConfig(CONFIG_PATH)
         self.clock = CTTime()
         self.solenoid_mux = None
         self.led_mux = None
@@ -104,7 +103,7 @@ class CT:
             self.i2c = None
             Mux = FakeMux
             Button = FakeButton
-        solenoid_map, led_map = self.load_mapping('mappings.json', self.config['mapping'])
+        solenoid_map, led_map = self.load_mappings(MAPPINGS_PATH, self.config['mapping'])
         self.solenoid_mux = Mux(self.i2c, SOLENOID_MUX_ADDR, solenoid_map)
         self.led_mux = Mux(self.i2c, LED_MUX_ADDR, led_map)
         self.button = Button(CT_BUTTON_GPIO_PIN)

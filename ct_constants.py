@@ -1,3 +1,6 @@
+CONFIG_PATH = 'config.json'
+MAPPINGS_PATH = 'mappings.json'
+
 MAJOR_ARP = [1, 3, 5, 8]
 
 SOLENOID_MUX_ADDR = 0x20
