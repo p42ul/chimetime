@@ -78,10 +78,11 @@ class CT:
         for m in (self.solenoid_mux, self.led_mux):
             m.all_off()
 
-    def load_mapping(self, path) -> (dict, dict):
+    def load_mapping(self, path, mapping) -> (dict, dict):
         with open(path, 'r') as f:
             data = f.read()
         j = json.loads(data)
+        j = j[mapping]
         solenoids = {int(k): v for k,v in j['solenoid'].items()}
         leds = {int(k): v for k,v in j['led'].items()}
         return (solenoids, leds)
@@ -103,7 +104,7 @@ class CT:
             self.i2c = None
             Mux = FakeMux
             Button = FakeButton
-        solenoid_map, led_map = self.load_mapping(self.config['mapping'])
+        solenoid_map, led_map = self.load_mapping('mappings.json', self.config['mapping'])
         self.solenoid_mux = Mux(self.i2c, SOLENOID_MUX_ADDR, solenoid_map)
         self.led_mux = Mux(self.i2c, LED_MUX_ADDR, led_map)
         self.button = Button(CT_BUTTON_GPIO_PIN)
