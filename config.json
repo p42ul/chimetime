@@ -1,10 +1,10 @@
 {
   "mapping": "ct1",
-  "play_arp": false,
+  "play_arp": true,
   "pre_delay": 0.5,
   "arp_delay": 1.75,
   "arp_interdigit_delay": 0.15,
-  "interdigit_delay": 2.0,
+  "interdigit_delay": 0.75,
   "grandfather_mode": false,
   "grandfather_delay": 3.0,
   "led_on_time": 2.0
