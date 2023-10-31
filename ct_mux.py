@@ -3,10 +3,7 @@ from ct_constants import SOLENOID_MUX_ADDR
 
 # Standard libraries
 from abc import ABC, abstractmethod
-import logging
-import os
-import threading
-
+import time
 
 class CTMux(ABC):
     @abstractmethod
@@ -51,22 +48,22 @@ class RealMux(CTMux):
     def all_off(self):
         for num in self.mappings.keys():
             self._set(num, False)
+
 class FakeMux(CTMux):
     def __init__(self, i2c, address, mappings):
-        logging.info(f'Initializing fake mux at address {hex(address)}...')
+        print(f'Initializing fake mux at address {hex(address)}...')
         self.mappings = mappings
         self.address = address
         # Needed to keep track of the state of the mux.
         self.state = {k: False for k in self.mappings.keys()}
         if self.address != SOLENOID_MUX_ADDR:
             return
-        self.tones = {num: os.path.abspath(f'tones/{num}.wav') for num in range(13)}
 
     def _set(self, num, value):
         self.state[num] = value
         pin = self.mappings[num]
         if pin is not None:
-            logging.info(f'{hex(self.address)} {num} -> {pin} is now {value}')
+            print(f'{time.monotonic()}: {hex(self.address)} {num} -> {pin} is now {value}')
 
     def on(self, num: int):
         self._set(num, True)

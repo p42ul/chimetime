@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import logging
-import random
 
 
 class CTButton(ABC):
@@ -22,7 +21,12 @@ class RealButton(CTButton):
 class FakeButton(CTButton):
     def __init__(self, pin):
         logging.info(f'Initializing fake CT button on pin {pin}...')
+        self.pressed = False
 
     def is_pressed(self):
-        input('waiting for input to create fake button press...\n')
-        return True
+        if self.pressed:
+            return False
+        if input('enter any text to create fake button press, or nothing to continue...'):
+            self.pressed = True
+            return True
+        return False

@@ -11,8 +11,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 def app_factory(fake):
     app = Flask(__name__)
-    ct = CT(fake)
-    music = Music(ct.play_note)
+    ct = CT(fake=fake)
+    # music = Music(ct.play_note)
     thread = threading.Thread(target=ct.run, daemon=True)
     thread.start()
 
@@ -20,13 +20,13 @@ def app_factory(fake):
     def hello():
         return render_template('index.html')
 
-    @app.route('/auld')
-    def auld():
-        def generate():
-            yield 'playing a merry tune...'
-            music.auld()
-            yield 'happy new year!'
-        return app.response_class(generate())
+    # @app.route('/auld')
+    # def auld():
+    #     def generate():
+    #         yield 'playing a merry tune...'
+    #         music.auld()
+    #         yield 'happy new year!'
+    #     return app.response_class(generate())
 
     @app.route('/static/<path:path>')
     def send_static(path):
@@ -40,13 +40,13 @@ def app_factory(fake):
             yield f'done at {datetime.now()}'
         return app.response_class(generate())
 
-    @app.route('/chime_grandfather')
-    def chime_grandfather():
-        def generate():
-            yield 'grandfather clocking...'
-            ct.play_grandfather(datetime.now())
-            yield f'done at {datetime.now()}'
-        return app.response_class(generate())
+    # @app.route('/chime_grandfather')
+    # def chime_grandfather():
+    #     def generate():
+    #         yield 'grandfather clocking...'
+    #         ct.play_grandfather(datetime.now())
+    #         yield f'done at {datetime.now()}'
+    #     return app.response_class(generate())
 
     @app.route('/chime_test')
     def chime_test():

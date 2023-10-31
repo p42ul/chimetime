@@ -17,7 +17,8 @@ BPM = 100
 REST = -1
 
 class Music:
-    def __init__(self, play_func):
+    def __init__(self, play_func, scheduler):
+        self.scheduler = scheduler
         self.play = play_func
         self.tempo = 1 / (BPM/60)
 
