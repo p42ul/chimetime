@@ -60,7 +60,6 @@ class FakeMux(CTMux):
         self.state = {k: False for k in self.mappings.keys()}
         if self.address != SOLENOID_MUX_ADDR:
             return
-        self.tones = {num: os.path.abspath(f'tones/{num}.wav') for num in range(13)}
 
     def _set(self, num, value):
         self.state[num] = value
