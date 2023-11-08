@@ -3,9 +3,9 @@ Description=Chime Time
 After=multi-user.target
 
 [Service]
-User=pi
-WorkingDirectory=/home/pi/chimetime
-ExecStart=/usr/bin/python3 -m gunicorn --timeout 60 --graceful-timeout 60 --bind=0.0.0.0:5000 "ct_webserver:app_factory('config.json', fake=False)"
+User=root
+WorkingDirectory=/root/chimetime
+ExecStart=/root/chimetime/venv/bin/python ct_webserver.py
 
 Restart=always
 

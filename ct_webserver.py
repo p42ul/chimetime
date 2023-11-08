@@ -1,6 +1,7 @@
 from ct_main import CT
 from ct_music import Music
 
+import argparse
 import threading
 from datetime import datetime
 import logging
@@ -8,6 +9,10 @@ import logging
 from flask import Flask, json, render_template, request, send_from_directory
 
 logging.basicConfig(level=logging.DEBUG)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--fake', action='store_true', help='If set, will print instead of setting mux outputs.')
+args = parser.parse_args()
 
 def app_factory(fake):
     app = Flask(__name__)
@@ -86,5 +91,5 @@ def app_factory(fake):
 # This should only be used for testing.
 # Use a real WSGI server in production.
 if __name__ == '__main__':
-    app = app_factory(fake=True)
-    app.run()
+    app = app_factory(fake=args.fake)
+    app.run(host='0.0.0.0', port=5000)
