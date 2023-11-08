@@ -109,6 +109,7 @@ class CT:
         self.button = Button(CT_BUTTON_GPIO_PIN)
         self.all_off()
         atexit.register(self.all_off)
+        self.run()
 
     def run(self):
         logging.debug('entering button detection loop.')
