@@ -7,7 +7,7 @@ import logging
 
 from flask import Flask, json, render_template, request, send_from_directory
 
-def app_factory(fake):
+def app_factory(ct):
     app = Flask(__name__)
     ct = CT('fake') if fake else CT('real')
     music = Music(ct.play_note)
