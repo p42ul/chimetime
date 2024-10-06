@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
 import logging
-import random
 
 
 class CTButton(ABC):
-
     @abstractmethod
     def is_pressed(self) -> bool:
         pass

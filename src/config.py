@@ -1,10 +1,10 @@
-from ct_constants import CONFIG_PATH
+from constants import CONFIG_PATH
 
 import json
 import logging
 import os
 
-class CTConfig:
+class Config:
     def __init__(self):
         config_path = os.path.abspath(CONFIG_PATH)
         if not os.path.exists(config_path):

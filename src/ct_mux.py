@@ -1,11 +1,9 @@
 # Local libraries
-from ct_constants import SOLENOID_MUX_ADDR
+from constants import SOLENOID_MUX_ADDR
 
 # Standard libraries
 from abc import ABC, abstractmethod
 import logging
-import os
-import threading
 
 
 class CTMux(ABC):
@@ -20,6 +18,7 @@ class CTMux(ABC):
     @abstractmethod
     def all_off(self):
         pass
+
 
 class RealMux(CTMux):
     def __init__(self, i2c, address, mappings):
@@ -51,6 +50,8 @@ class RealMux(CTMux):
     def all_off(self):
         for num in self.mappings.keys():
             self._set(num, False)
+
+
 class FakeMux(CTMux):
     def __init__(self, i2c, address, mappings):
         logging.info(f'Initializing fake mux at address {hex(address)}...')
